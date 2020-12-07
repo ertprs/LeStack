@@ -1,11 +1,11 @@
 const execute = (leStack, msg, args) => {
-msg.reply(`
+return msg.reply(`
 -------Lestack (Ajuda)-------
-!Help -> Mostra os comandos
+$help -> Mostra os comandos
 `)
 }
 module.exports = {
-  name: "Help",
-  archive: "./commands/help.js",
+  name: "help",
+  about: 'Mostra os comandos',
   execute
 }

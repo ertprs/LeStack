@@ -1,6 +1,5 @@
 const fs = require('fs')
-const system = require('./systems')
-
+const path = require('path')
 const { Client} = require('whatsapp-web.js')
 const configs = require("./configurations")
 
@@ -48,32 +47,44 @@ leStack.on('auth_failure', msg => {
 	console.error('Falhana conexão: \n', msg)
 });
 
-
 leStack.on('ready', () => {
 	console.log('Cheguei')
-	system.refreshCommands()
 })
+
+
+/*
+	Funções disparadas quando enviam uma mensagem
+*/
 
 leStack.on('message', msg => {
 
-	if(!msg.body.startsWith(configs.prefix) && msg.getChat.name == " Stack de Programadores"){
-		return console.log(`Mensagem Recebida------------\nAutor = ${msg.author}\nMensagem = ${msg.body}\n`)
+	if (!msg.body.startsWith(configs.prefix)) {
+		return console.log(`Mensagem Recebida---\nAutor = ${msg.author}\nMensagem = ${msg.body}\n`)
+	} 
 
-	} else if (msg.body.startsWith(configs.prefix) && msg.getChat.name == " Stack de Programadores") {
+	else if (msg.body.startsWith(configs.prefix)) {
 
-		const args = msg.body.slice(configs.prefix.length).split(" ")
-		const commandName = args.shift()
-
-		console.log(commandName)
 
 		try { //Procura o comando na pasta "Comandos" para executá-lo
-			const command = system.getCommand(commandName)
-			command.execute(leStack, msg, args)
+
+			const args = msg.body.slice(configs.prefix.length).split(" ")
+			const commandName = args.shift()
+
+			const CommandFiles = fs
+			.readdirSync(path.join(__dirname,"./commands"))
+			.filter(filename => filename.endsWith(".js"))
+			
+			for(filename of CommandFiles){
+				const command = require(`./commands/${filename}`)
+				if ( command.name == commandName ) {
+					command.execute(leStack, msg, args)
+				}
+			}
+
 		} catch(e) {
 			msg.reply("o comando não foi encontrado :(")
 			console.log(e)
 		}
-	
 	}
 })
 
