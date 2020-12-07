@@ -4,9 +4,9 @@ const { Client} = require('whatsapp-web.js')
 const configs = require("./configurations")
 
 /*
-src/main.js
-05/12/2020   -  Weslley Borges dos Santos
-Esse é o arquivo principal do bot, onde ocorre suacnexão e chamada de eventos;
+	src/main.js
+	05/12/2020   -  Weslley Borges dos Santos
+	Esse é o arquivo principal do bot, onde ocorre suacnexão e chamada de eventos;
 */
 
 const SESSION_FILE_PATH = '../session.json';
@@ -77,12 +77,13 @@ leStack.on('message', msg => {
 			for(filename of CommandFiles){
 				const command = require(`./commands/${filename}`)
 				if ( command.name == commandName ) {
-					command.execute(leStack, msg, args)
+					return command.execute(leStack, msg, args)
 				}
 			}
+			msg.reply("o comando não foi encontrado :(")
 
 		} catch(e) {
-			msg.reply("o comando não foi encontrado :(")
+			msg.reply("Houve um erro nessa bagaça, chame um adm, na moral.")
 			console.log(e)
 		}
 	}
