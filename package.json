@@ -1,0 +1,16 @@
+{
+  "name": "LeStack",
+  "version": "1.0.0",
+  "main": "main.js",
+  "author": "Weslley Borges <60989781+Weslley-Borges@users.noreply.github.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon ./src/main.js"
+  },
+  "dependencies": {
+    "whatsapp-web.js": "^1.11.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
+}
