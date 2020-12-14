@@ -23,7 +23,7 @@ Esse objeto deve incluir WABrowserId, WASecretBundle, WAToken1 e WAToken2.
 const chromePath = 'C:/Program Files/Google/Chrome/Application/chrome.exe'
 const leStack = new Client({ 
 	puppeteer: { 
-		headless: false, 
+		headless: true, 
 		executablePath: chromePath
 	},
 	session: sessionData
@@ -62,10 +62,8 @@ leStack.on('ready', () => {
 
 leStack.on('message', async (msg) => {
 	const chat = await msg.getChat()
-	
 	if (!msg.body.startsWith(configs.prefix)) {
-		console.log(msg)
-		return console.log(`MENSAGEM RECEBIDA\n______________________\nAUTOR = ${msg.author}\nCHAT_ID = ${chat.id}\nONDE = ${chat.name}\nMENSAGEM = ${msg.body}\n`)
+		return console.log(`MENSAGEM RECEBIDA\n______________________\nAUTOR = ${msg.author}\nONDE = ${chat.name}\nMENSAGEM = ${msg.body}\n`)
 	} 
 
 
