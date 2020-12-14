@@ -5,7 +5,7 @@
   "author": "Weslley Borges <60989781+Weslley-Borges@users.noreply.github.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon ./src/main.js"
+    "start": "nodemon ./src/main.js"
   },
   "dependencies": {
     "sqlite3": "^5.0.0",
