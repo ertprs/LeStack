@@ -1,5 +1,5 @@
 const configurations= {
-  "prefix": '$'
+  "prefix": "$"
 }
 
 module.exports = configurations

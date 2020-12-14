@@ -8,6 +8,7 @@
     "dev": "nodemon ./src/main.js"
   },
   "dependencies": {
+    "sqlite3": "^5.0.0",
     "whatsapp-web.js": "^1.11.1"
   },
   "devDependencies": {

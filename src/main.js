@@ -16,8 +16,10 @@ if (fs.existsSync(SESSION_FILE_PATH)) {
 }
 
 
-// Você pode usar uma sessão existente e escapar do escaneamento de QR adicionado uma "sessão" objeto nas opções do leStack.
-// Esse objeto deve incluir WABrowserId, WASecretBundle, WAToken1 e WAToken2.
+/*
+Você pode usar uma sessão existente e escapar do escaneamento de QR adicionado uma "sessão" objeto nas opções do leStack.
+Esse objeto deve incluir WABrowserId, WASecretBundle, WAToken1 e WAToken2.
+*/
 const chromePath = 'C:/Program Files/Google/Chrome/Application/chrome.exe'
 const leStack = new Client({ 
 	puppeteer: { 
@@ -30,8 +32,8 @@ const leStack = new Client({
 
 
 // Gera e escaneia o QRCode com o seu celular
-leStack.on('qr', qr => {
-  console.log('QR Code recebido: ', qr)
+leStack.on('qr', (qr) => {
+  qrcode.generate(qr, {small: true});
 })
 
 leStack.on('authenticated', (session) => {
@@ -44,50 +46,63 @@ leStack.on('authenticated', (session) => {
 })
 
 leStack.on('auth_failure', msg => {
-	console.error('Falhana conexão: \n', msg)
+	console.error('Falha na conexão: \n', msg)
 });
 
 leStack.on('ready', () => {
 	console.log('Cheguei')
+	setInterval(getHour(), 60000)
 })
+
 
 
 /*
 	Funções disparadas quando enviam uma mensagem
 */
 
-leStack.on('message', msg => {
-
+leStack.on('message', async (msg) => {
+	const chat = await msg.getChat()
+	
 	if (!msg.body.startsWith(configs.prefix)) {
-		return console.log(`Mensagem Recebida---\nAutor = ${msg.author}\nMensagem = ${msg.body}\n`)
+		console.log(msg)
+		return console.log(`MENSAGEM RECEBIDA\n______________________\nAUTOR = ${msg.author}\nCHAT_ID = ${chat.id}\nONDE = ${chat.name}\nMENSAGEM = ${msg.body}\n`)
 	} 
 
-	else if (msg.body.startsWith(configs.prefix)) {
 
+	try { //Procura o comando na pasta "Comandos" para executá-lo
 
-		try { //Procura o comando na pasta "Comandos" para executá-lo
+		const args = msg.body.slice(configs.prefix.length).split(" ")
+		const commandName = args.shift()
 
-			const args = msg.body.slice(configs.prefix.length).split(" ")
-			const commandName = args.shift()
+		console.log(args)
+		console.log(commandName)
 
-			const CommandFiles = fs
-			.readdirSync(path.join(__dirname,"./commands"))
-			.filter(filename => filename.endsWith(".js"))
+		const CommandFiles = fs
+		.readdirSync(path.join(__dirname,"./commands"))
+		.filter(filename => filename.endsWith(".js"))
 			
-			for(filename of CommandFiles){
-				const command = require(`./commands/${filename}`)
-				if ( command.name == commandName ) {
-					return command.execute(leStack, msg, args)
-				}
+		for(filename of CommandFiles){
+			const command = require(`./commands/${filename}`)
+			if ( command.name == commandName ) {
+				return command.execute(leStack, msg, args)
 			}
-			msg.reply("o comando não foi encontrado :(")
-
-		} catch(e) {
-			msg.reply("Houve um erro nessa bagaça, chame um adm, na moral.")
-			console.log(e)
 		}
+		msg.reply("o comando não foi encontrado :(")
+
+	} catch(e) {
+		msg.reply("Houve um erro nessa bagaça, chame um adm, na moral.")
+		console.log(e)
 	}
+
 })
 
-
 leStack.initialize()
+
+/*Funções menores*/
+
+function getHour() {
+	now = Date
+	if (now.getHours() == 12 && now.getMinutes() == 00) {
+		leStack.sendMessage("", `BOT: Agora é 12:00 krl!\nComer, comer! Comer, comer!\nÉ o melhor para poder crescer!`)
+	}
+}
