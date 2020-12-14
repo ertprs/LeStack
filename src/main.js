@@ -24,7 +24,7 @@ const chromePath = 'C:/Program Files/Google/Chrome/Application/chrome.exe'
 const leStack = new Client({ 
 	puppeteer: { 
 		headless: true, 
-		executablePath: chromePath
+		//executablePath: chromePath
 	},
 	session: sessionData
 })
